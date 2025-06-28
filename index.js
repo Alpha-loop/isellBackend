@@ -14,7 +14,7 @@ connectDB();
 app.use(express.json());
 const allowedOrigins = [
   'http://localhost:3000', // Local development
-  'https://iselllogistics.com', // Replace with your actual frontend Vercel URL
+  'app.iselllogistics.com', // Replace with your actual frontend Vercel URL
 ];
 app.use(cors({
   origin: (origin, callback) => {
