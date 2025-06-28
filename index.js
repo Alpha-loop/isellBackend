@@ -13,8 +13,8 @@ connectDB();
 // Middleware
 app.use(express.json());
 const allowedOrigins = [
-  'http://localhost:3000', // Local development
-  'app.iselllogistics.com', // Replace with your actual frontend Vercel URL
+  'https://app.iselllogistics.com', // Your frontend production URL
+  'http://localhost:3000', // For local development
 ];
 app.use(cors({
   origin: (origin, callback) => {
