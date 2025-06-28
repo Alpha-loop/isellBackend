@@ -12,10 +12,21 @@ connectDB();
 
 // Middleware
 app.use(express.json());
+const allowedOrigins = [
+  'http://localhost:3000', // Local development
+  'https://iselllogistics.com', // Replace with your actual frontend Vercel URL
+];
 app.use(cors({
-  origin: '*', // Allow all origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g., Postman, curl) or from allowed origins
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 // Routes
