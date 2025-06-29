@@ -25,9 +25,13 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Add all needed methods
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Enable if using cookies/auth tokens
+  optionsSuccessStatus: 200, // Some legacy browsers choke on 204
 }));
+
+app.options('*', cors());
 
 // Routes
 app.use('/api', quoteRoutes);
