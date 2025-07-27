@@ -24,13 +24,32 @@ const registerUser = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: 'An account with this email already exists.' });
     }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new User({ firstName, lastName, email, password });
+    const newUser = new User({ 
+      firstName, 
+      lastName, 
+      email, 
+      password: hashedPassword,
+    });
     const savedUser = await newUser.save();
+
+    const payload = {
+      user: {
+        id: savedUser._id, 
+        email: savedUser.email,
+        firstName: savedUser.firstName,
+        lastName: savedUser.lastName,
+      },
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '1h' });
 
     res.status(201).json({
       message: 'User registered successfully!',
-      user: { id: savedUser._id, firstName: savedUser.firstName, lastName: savedUser.lastName, email: savedUser.email }
+      user: { id: savedUser._id, firstName: savedUser.firstName, lastName: savedUser.lastName, email: savedUser.email },
+      token: token
     });
   } catch (error) {
      if (error.name === 'ValidationError') {
